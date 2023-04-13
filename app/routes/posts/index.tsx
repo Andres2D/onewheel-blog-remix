@@ -1,25 +1,20 @@
 import { Link, useLoaderData } from '@remix-run/react';
-import { json } from '@remix-run/node';
+import { json, LoaderFunction } from '@remix-run/node';
 import type { Post } from '../../interfaces/post';
+import { getPosts } from '../../models/post.server';
 
-export const loader = async () => {
-  const posts: Post[] = [
-    {
-      slug: 'how-to-became-frontend-developer',
-      title: 'How to became a frontend developer'
-    },
-    {
-      slug: 'create-your-first-portfolio-page',
-      title: 'Create your first portfolio page'
-    },
-  ];
-  
-  return json({posts})
+type LoaderData = {
+  posts: Awaited<ReturnType<typeof getPosts>>
+}
+
+export const loader: LoaderFunction = async () => {
+  const posts = await getPosts();
+  return json<LoaderData>({posts})
 };
 
 const PostsRoutes = () => {
 
-  const { posts } = useLoaderData();
+  const { posts } = useLoaderData() as LoaderData;
 
   return ( 
     <main>
