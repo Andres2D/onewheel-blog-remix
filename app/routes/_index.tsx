@@ -1,5 +1,5 @@
 import type { V2_MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import { Link, Links } from "@remix-run/react";
 
 import { useOptionalUser } from "~/utils";
 
@@ -64,6 +64,12 @@ export default function Index() {
               </a>
             </div>
           </div>
+        </div>
+
+        <div className="mx-auto mt-16 max-w-7xl text-center">
+          <Link to="/posts" className="text-xl text-blue-600 underline">
+            Blog Post
+          </Link>
         </div>
 
         <div className="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
