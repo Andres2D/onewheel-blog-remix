@@ -22,7 +22,7 @@ const PostsRoutes = () => {
       <ul>
         {posts.map((post) => (
           <li key={post.slug}>
-            <Link to={post.slug} className="text-blue-600 underline">
+            <Link to={post.slug} prefetch="intent" className="text-blue-600 underline">
               {post.title}
             </Link>
           </li>
