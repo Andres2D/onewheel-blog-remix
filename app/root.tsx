@@ -40,7 +40,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <script 
-          dangerouslySetInnerHTML={{__html: `window.ENV = ${JSON.stringify(data.env)}`}}
+          dangerouslySetInnerHTML={{__html: `window.ENV = ${JSON.stringify(data.ENV)}`}}
         />
         <LiveReload />
       </body>
