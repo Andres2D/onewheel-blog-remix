@@ -11,7 +11,8 @@ type ActionData = {
 } | undefined;
 
 export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData(); 
+  const formData = await request.formData();   
+
   const title = formData.get('title');
   const slug = formData.get('slug');
   const markdown = formData.get('markdown');
