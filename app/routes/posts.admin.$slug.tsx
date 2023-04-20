@@ -1,17 +1,21 @@
 import { Form, useActionData, useNavigation, useLoaderData } from '@remix-run/react';
+import type { Post } from '@prisma/client';
 import { type ActionFunction, redirect, json, type LoaderFunction } from "@remix-run/node";
 import { createPost, deletePost, getPost, updatePost } from '~/models/post.server';
 import invariant from 'tiny-invariant';
 import { requireAdminUser } from '~/session.server';
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
 
+type LoaderData = { post?: Post }
+
 export const loader: LoaderFunction = async({request, params}) => {
   await requireAdminUser(request);
+  invariant(params.slug, 'Slug is required');
   if(params.slug === 'new') {
-    return json({});
+    return json<LoaderData>({});
   }
   const post = await getPost(params.slug);
-  return json({post});
+  return json<LoaderData>({ post });
 }
 
 type ActionData = {
@@ -22,6 +26,7 @@ type ActionData = {
 
 export const action: ActionFunction = async ({ request, params }) => {
   await requireAdminUser(request);
+  invariant(params.slug, 'Slug is required');
   const formData = await request.formData();  
   const intent = formData.get('intent');
   
@@ -60,7 +65,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function AdminIndexRoute() {
   const errors = useActionData() as ActionData;
-  const data = useLoaderData();
+  const data = useLoaderData() as LoaderData;
 
   const transition = useNavigation();
   const isCreating = transition?.formData?.get('intent') === 'create';
