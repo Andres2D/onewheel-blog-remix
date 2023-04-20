@@ -1,9 +1,10 @@
-import { Form, useActionData, useNavigation, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useNavigation, useLoaderData, useCatch, useRouteError, useParams } from '@remix-run/react';
 import type { Post } from '@prisma/client';
 import { type ActionFunction, redirect, json, type LoaderFunction } from "@remix-run/node";
 import { createPost, deletePost, getPost, updatePost } from '~/models/post.server';
 import invariant from 'tiny-invariant';
 import { requireAdminUser } from '~/session.server';
+import { DEFAULT_MAX_VERSION } from 'tls';
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
 
 type LoaderData = { post?: Post }
@@ -15,6 +16,9 @@ export const loader: LoaderFunction = async({request, params}) => {
     return json<LoaderData>({});
   }
   const post = await getPost(params.slug);
+  if(!post) {
+    throw new Response('Not found', {status: 404});
+  }
   return json<LoaderData>({ post });
 }
 
@@ -139,4 +143,14 @@ export default function AdminIndexRoute() {
       </div>
     </Form>
   );
+};
+
+export function ErrorBoundary() {
+  const error: any = useRouteError();
+  const params = useParams();
+  console.log(error);
+  if(error.status === 404) {
+    return <div>{`Uh oh! This post with the slug "${params.slug}" doesn't exist!`}</div>;
+  }
+  throw new Error(`Unsupported thrown response status code: ${error.status}`);
 };
