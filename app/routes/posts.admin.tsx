@@ -1,4 +1,4 @@
-import { useLoaderData, Link, Outlet } from '@remix-run/react';
+import { useLoaderData, Link, Outlet, useRouteError } from '@remix-run/react';
 import { type LoaderFunction, json } from '@remix-run/node';
 import { getPostingListing } from '~/models/post.server';
 import { requireAdminUser } from '~/session.server';
@@ -38,4 +38,15 @@ export default function AdminRoute() {
       </div>
     </div>
   );
+};
+
+export function ErrorBoundary() {
+  const error: any = useRouteError();
+  console.log(error);
+  return (
+    <div className='text-red-500'>
+      Oh no, something went wrong!
+      <pre>{error.message}</pre>
+    </div>
+  )
 };

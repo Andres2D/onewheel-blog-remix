@@ -146,11 +146,10 @@ export default function AdminIndexRoute() {
 };
 
 export function ErrorBoundary() {
-  const error: any = useRouteError();
+  const routeError: any = useRouteError();
   const params = useParams();
-  console.log(error);
-  if(error.status === 404) {
+  if(routeError.status === 404) {
     return <div>{`Uh oh! This post with the slug "${params.slug}" doesn't exist!`}</div>;
   }
-  throw new Error(`Unsupported thrown response status code: ${error.status}`);
+  throw new Error(`Unsupported thrown response status code: ${routeError.status}`);
 };
